@@ -9,3 +9,4 @@ matrixCorrelationPlot <- function(df){
     ggplot2::theme(plot.title = ggplot2::element_text(size = 13, face = "bold", hjust = 0.5),
                    strip.text = ggplot2::element_text(size = 10, face = "bold"))
 }
+
