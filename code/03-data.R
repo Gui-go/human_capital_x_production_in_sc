@@ -2,6 +2,9 @@
 # "https://sidra.ibge.gov.br/Tabela/1554
 # https://sidra.ibge.gov.br/geratabela?format=us.csv&name=tabela1554.csv&terr=NC&rank=-&query=t/1554/n6/all/v/allxp/p/all/c1568/0,99713/d/v140%200/l/v,p%2Bc1568,t
 # https://sidra.ibge.gov.br/geratabela?format=us.csv&name=tabela1554.csv&terr=NC&rank=-&query=t/1554/n6/all/v/1000140/p/all/c1568/0,99713/d/v1000140%202/l/v,p%2Bc1568,t"
+
+library(dplyr)
+
 suppressMessages(
   df <- readr::read_csv("data/clean/tabela1554.csv") %>% 
     janitor::clean_names() %>%
@@ -27,7 +30,8 @@ suppressMessages(
     dplyr::filter(co_ano>=2010) %>%
     dplyr::filter(sg_uf_mun%in%c('SC')) %>%
     dplyr::mutate(exp_fob=if_else(is.na(vl_fob), 0, vl_fob)) %>% 
-    # dplyr::mutate("sh2" = substr(sh4, 1, 2)) %>%
+    dplyr::mutate("sh2" = substr(sh4, 1, 2)) %>%
+    dplyr::filter(sh2=='02') %>% 
     dplyr::group_by(co_mun) %>%
     dplyr::summarise(exp_fob = sum(exp_fob)) %>% 
     dplyr::mutate(cd_mun=as.character(co_mun)) %>% 
@@ -42,4 +46,4 @@ data <- left_join(df, exp_comex, by=c("cd_mun")) %>%
     log_pop_sup_comp = log(pop_sup_comp)
   )
 
-# rio::export(data, 'data/data_exp_edusup_sc.csv')
+rio::export(data, 'data/data_exp_edusup_sc_sh2-02.csv')

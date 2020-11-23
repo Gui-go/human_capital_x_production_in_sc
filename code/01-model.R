@@ -29,22 +29,17 @@ if(!require(jtools)){install.packages("jtools")}
 
 source(file = "code/02-matrix_correlation_plot.R")
 
-
-
-
-dict <- list('SC'=42, 'PR'=41, 'RS'=43)
-dict[['SC']]
-
 # Model -------------------------------------------------------------------
 
-model <- function(state=c('SC')){
+model <- function(state=c('RS'), sh2='02'){
   # Function to build the outputs of the analysis
   
-  data <- readr::read_csv(file = "data/data_exp_edusup_sc.csv")
+  # data <- readr::read_csv(file = 'data/data_exp_edusup_sc.csv')
+  data <- readr::read_csv(file = paste0('data/data_exp_edusup_sc_sh2-', sh2, '.csv'))
   mc <- matrixCorrelationPlot(data[, c('exp_fob', 'log_exp', 'pop_sup_comp', 'log_pop_sup_comp')])
   data_popsup_reg <- lm(log_exp ~ log_pop_sup_comp, data = data)
   # hist(data_popsup_reg$residuals, nclass = 30)
-  shapiro.test(data_popsup_reg$residuals)
+  # shapiro.test(data_popsup_reg$residuals)
   data_popsup_regsum <- summary(data_popsup_reg)
   pmodel <- jtools::summ(data_popsup_reg, digits = 5)
   # confint(data_popsup_reg, level = .99)
@@ -58,5 +53,13 @@ model <- function(state=c('SC')){
   
 }
 
-model()$correlationMatrixPlot
-model()$logModel
+model(sh=10)$correlationMatrixPlot
+
+model(sh=10)$logModel
+model(sh=64)$logModel
+model(sh=84)$logModel
+model(sh='02')$logModel
+
+
+
+
